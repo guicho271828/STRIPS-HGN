@@ -16,6 +16,9 @@ from strips_hgn.models.hypergraph_nets_adaptor import (
 from strips_hgn.planning import Proposition, STRIPSProblem
 
 
+import sys
+
+
 class BaseFeatureMappingWorkflow(object):
     """ Base Workflow which maps features """
 
@@ -115,6 +118,13 @@ class BaseFeatureMappingWorkflow(object):
         -------
         HypergraphsTuple
         """
+
+        # New
+        # It could happen that some state propositions (corresponding to static predicates)
+        # are not in the problem facts (which do not contain static predicates)
+        # For this reason, we remove from the state those propositions that are not in the problem facts
+        current_state = current_state.intersection(set(hypergraph.problem.propositions))
+
         # Get the global features and reshape so its shape is 1 x n
         global_features = hypergraph.global_features(
             self._get_global_feature_mapper()
