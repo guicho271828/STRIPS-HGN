@@ -1,8 +1,6 @@
 import logging
 from typing import Dict, List, Optional, Union
 
-from pyperplan.search import SearchMetrics
-
 import strips_hgn.planning.pyperplan_api as pyperplan_api
 from strips_hgn.models.heuristic import STRIPSHGNHeuristic
 from strips_hgn.planning import Heuristic, SearchAlgorithm, STRIPSProblem
@@ -32,7 +30,7 @@ def evaluate_problem_with_pyperplan(
     strips_hgn_heuristic: Optional[STRIPSHGNHeuristic],
     heuristics: List[Heuristic],
     max_search_time: Number,
-) -> Dict[Union[Heuristic, STRIPSHGNHeuristic], SearchMetrics]:
+):
     """
     Evaluate a problem with Pyperplan
 

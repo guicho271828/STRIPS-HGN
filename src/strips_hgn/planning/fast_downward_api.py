@@ -2,12 +2,10 @@ import logging
 import os
 from typing import List, Optional
 
-from fast_downward.driver.main import main as fd_main
-from strips_hgn.config import MAX_FD_SEARCH_TIME
 from strips_hgn.planning import STRIPSProblem
 
 # Use LMCut as it is quicker
-_DEFAULT_OPTS = ["--search", f"astar(lmcut(), max_time={MAX_FD_SEARCH_TIME})"]
+_DEFAULT_OPTS = None # We no longer use the planner
 _SAS_PLAN_FNAME = "sas_plan"
 
 _log = logging.getLogger(__name__)
@@ -28,9 +26,7 @@ def get_optimal_actions_using_fd(
     Optional[List[str]], sequential list of actions (i.e. the plan),
     or None if we could not find it
     """
-    exit_code = fd_main(
-        argv=[problem.domain_pddl, problem.problem_pddl] + _DEFAULT_OPTS
-    )
+    exit_code = None # We no longer use the planner
 
     if exit_code == 12:
         _log.error(
