@@ -14,7 +14,7 @@ from pyperplan.heuristics.relaxation import (
 )
 from pyperplan.pddl.parser import Parser
 from pyperplan.pddl.pddl import Domain, Problem
-from pyperplan.search import SearchMetrics, astar_search
+from pyperplan.search import astar_search
 from pyperplan.task import Task
 
 from strips_hgn.utils import Number
@@ -74,10 +74,12 @@ def _parse(domain_file: str, problem_file: str) -> Tuple[Domain, Problem]:
     return domain, problem
 
 
-def _ground(problem: Problem) -> Task:
+def _ground(problem: Problem, remove_statics_from_initial_state=False, 
+            remove_irrelevant_operators=False) -> Task:
     """ Ground the problem"""
     _log.debug("Grounding start: {0}".format(problem.name))
-    task = grounding.ground(problem)
+    task = grounding.ground(problem, remove_statics_from_initial_state=remove_statics_from_initial_state,
+                            remove_irrelevant_operators=remove_irrelevant_operators)
     _log.debug("Grounding end: {0}".format(problem.name))
     _log.debug("{0} Variables created".format(len(task.facts)))
     _log.debug("{0} Operators created".format(len(task.operators)))
@@ -100,18 +102,17 @@ def get_domain_and_task(
     A tuple containing the Pyperplan Domain and Task
     """
     domain, problem = _parse(domain_file, problem_file)
-    task = _ground(problem)
+    task = _ground(problem, remove_statics_from_initial_state=False, 
+                   remove_irrelevant_operators=False)
     return domain, task
 
 
 def find_solution(
     task: Task,
     heuristic: Heuristic,
-    search_algo: Callable[
-        [Task, Heuristic, Any], Tuple[List[str], SearchMetrics]
-    ],
+    search_algo,
     max_search_time: Number,
-) -> Tuple[List[str], SearchMetrics]:
+):
     """
     Runs a search algorithm to find a solution for a task
 
