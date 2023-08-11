@@ -187,6 +187,9 @@ class EncodeProcessDecode(nn.Module):
             latent = self._core(core_input)
             if not pred_mode or idx == steps - 1:
                 decoded_op = self._decoder(latent)
-                output_ops.append(self._output_transform(decoded_op))
+                # New
+                # Don't append the entire graph, but just the globals
+                # output_ops.append(self._output_transform(decoded_op))
+                output_ops.append(self._output_transform(decoded_op).globals)
 
         return output_ops

@@ -142,6 +142,49 @@ class _PyperplanSTRIPSProblem(STRIPSProblem):
         return self._actions
 
 
+# New
+# This class implements an abstract problem with a few propositions an actions
+# Later on, this problem will be converted to a hypergraphtuple and always be inserted as the
+# first sample of each (problem-state) batch. The reason to do this is that the STRIPS-HGN
+# makes wrong predictions for the first sample of the batch. Also, this sample cannot be empty.
+class PlaceholderProblem(STRIPSProblem):
+    def __init__(self):
+        super().__init__('', '')
+          
+        self._propositions = ['proposition_0', 'proposition_1']
+        self._proposition_to_idx = {'proposition_0':0, 'proposition_1':1}
+        
+        action_1 = STRIPSAction('action_1', 1.0, frozenset(['proposition_0']), frozenset(['proposition_1']), frozenset(['proposition_0'])) 
+        action_2 = STRIPSAction('action_2', 1.0, frozenset(['proposition_1']), frozenset(['proposition_0']), frozenset(['proposition_1']))
+        self._actions = [action_1, action_2]
+
+    @property
+    def domain_name(self) -> str:
+        return ''
+
+    @property
+    def name(self) -> str:
+        return ''
+
+    @property
+    def initial_state(self) -> FrozenSet[Proposition]:
+        return frozenset()
+
+    @property
+    def goals(self) -> FrozenSet[Proposition]:
+        return frozenset()
+
+    @property
+    def propositions(self) -> List[Proposition]:
+        return self._propositions
+
+    @property
+    def actions(self) -> List[STRIPSAction]:
+        return self._actions
+
+
+
+
 def get_strips_problem(
     domain_pddl: str, problem_pddl: str, use_pyperplan=True
 ):
