@@ -30,7 +30,7 @@ def _unsorted_segment_helper(
         assert repeated_data.shape[0] == indices.shape[0]
 
     # Placeholder for the segments
-    segments = torch.zeros((num_segments, repeated_data.shape[1]))
+    segments = torch.zeros((num_segments, repeated_data.shape[1]), device=data.device)
     return repeated_data, indices, segments
 
 
@@ -70,7 +70,7 @@ def torch_unsorted_segment_sum(
 #     )
 #
 #     # Note: not all indices will be present in a segment. Use torch.ones not torch.zeros to avoid divide by 0
-#     idx_counts = torch.zeros(num_segments)
+#     idx_counts = torch.zeros(num_segments, device=data.device)
 #     idx_counts[idx_elems] = existing_idx_counts.float()
 #     idx_counts = idx_counts.reshape(-1, 1)
 #
