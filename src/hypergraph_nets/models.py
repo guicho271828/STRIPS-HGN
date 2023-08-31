@@ -146,16 +146,26 @@ class EncodeProcessDecode(nn.Module):
         )
 
         # Transform outputs into appropriate shapes
+        # NOTE: in the original implementation, ReLU was applied to the output of the HGN.
+        # This resulted in the HGN not learning for approximately half of the time for more general tasks.
+        # (Heuristic learning, in contrast, only requires positive output.)
+        # If, instead of using ReLU, we apply LeakyReLU or no activation function, the issue is solved
+        # My hypothesis is that, due to weight initialization, half of the time the input ot the ReLU layer
+        # was x<0, so the gradient of ReLU was 0 and the HGN did not learn.
         edge_model = (
             nn.Sequential(
-                nn.Linear(hidden_size, edge_output_size), nn.ReLU(inplace=True)
+                nn.Linear(hidden_size, edge_output_size),
+                #nn.ReLU(inplace=True)
+                #nn.LeakyReLU(inplace=True)
             )
             if edge_output_size
             else _none_function
         )
         node_model = (
             nn.Sequential(
-                nn.Linear(hidden_size, node_output_size), nn.ReLU(inplace=True)
+                nn.Linear(hidden_size, node_output_size),
+                #nn.ReLU(inplace=True)
+                #nn.LeakyReLU(inplace=True)
             )
             if node_output_size
             else _none_function
@@ -163,7 +173,8 @@ class EncodeProcessDecode(nn.Module):
         global_model = (
             nn.Sequential(
                 nn.Linear(hidden_size, global_output_size),
-                nn.ReLU(inplace=True),
+                #nn.ReLU(inplace=True)
+                #nn.LeakyReLU(inplace=True)
             )
             if global_output_size
             else _none_function
