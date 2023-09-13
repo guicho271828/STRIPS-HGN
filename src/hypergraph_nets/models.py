@@ -114,6 +114,7 @@ class EncodeProcessDecode(nn.Module):
         node_output_size=None,
         global_input_size=None,
         global_output_size=None,
+        output_activation=None,
     ):
         super(EncodeProcessDecode, self).__init__()
         self._encoder = MLPGraphIndependent(
@@ -155,8 +156,11 @@ class EncodeProcessDecode(nn.Module):
         edge_model = (
             nn.Sequential(
                 nn.Linear(hidden_size, edge_output_size),
-                #nn.ReLU(inplace=True)
-                #nn.LeakyReLU(inplace=True)
+                *{
+                    None : [],
+                    "relu": [nn.ReLU(inplace=True)],
+                    "leaky": [nn.LeakyReLU(inplace=True)], # does not make much sense in retrospect
+                }[output_activation]
             )
             if edge_output_size
             else _none_function
@@ -164,8 +168,11 @@ class EncodeProcessDecode(nn.Module):
         node_model = (
             nn.Sequential(
                 nn.Linear(hidden_size, node_output_size),
-                #nn.ReLU(inplace=True)
-                #nn.LeakyReLU(inplace=True)
+                *{
+                    None : [],
+                    "relu": [nn.ReLU(inplace=True)],
+                    "leaky": [nn.LeakyReLU(inplace=True)], # does not make much sense in retrospect
+                }[output_activation]
             )
             if node_output_size
             else _none_function
@@ -173,8 +180,11 @@ class EncodeProcessDecode(nn.Module):
         global_model = (
             nn.Sequential(
                 nn.Linear(hidden_size, global_output_size),
-                #nn.ReLU(inplace=True)
-                #nn.LeakyReLU(inplace=True)
+                *{
+                    None : [],
+                    "relu": [nn.ReLU(inplace=True)],
+                    "leaky": [nn.LeakyReLU(inplace=True)], # does not make much sense in retrospect
+                }[output_activation]
             )
             if global_output_size
             else _none_function

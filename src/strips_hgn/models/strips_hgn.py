@@ -55,6 +55,7 @@ class STRIPSHGN(LightningModule):
             node_input_size=hparams.node_feature_mapper_cls.input_size(),
             # We are always predicting a single heuristic value
             global_output_size=1,
+            output_activation="relu",
         )
 
         # Log hyperparameters
